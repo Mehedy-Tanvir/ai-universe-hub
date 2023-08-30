@@ -1,5 +1,11 @@
 let isShowAll = false;
+let isLoading = true;
 const loadData = async () => {
+  isLoading = true;
+  if (isLoading) {
+    const spinner = document.getElementById("loading-spinner");
+    spinner.classList.remove("hidden");
+  }
   const res = await fetch("https://openapi.programming-hero.com/api/ai/tools");
   const data = await res.json();
   console.log(data.data.tools);
@@ -59,6 +65,11 @@ ${str}
       // const hrElement = document.querySelector("hr");
       // div.insertBefore(hrElement, features);
       cardContainer.appendChild(div);
+      isLoading = false;
+      if (!isLoading) {
+        const spinner = document.getElementById("loading-spinner");
+        spinner.classList.add("hidden");
+      }
     });
   } else {
     showAllBtn.classList.add("hidden");
@@ -111,6 +122,11 @@ ${str}
       // const hrElement = document.querySelector("hr");
       // div.insertBefore(hrElement, features);
       cardContainer.appendChild(div);
+      isLoading = false;
+      if (!isLoading) {
+        const spinner = document.getElementById("loading-spinner");
+        spinner.classList.add("hidden");
+      }
     });
   }
 };
@@ -138,9 +154,21 @@ async function detailsClickHandler(id) {
 
     </h2></div>
     <div class="flex gap-2 justify-center items-center">
-      <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#03A30A] text-[16px] text-center font-work-sans font-bold">${details.data.pricing[0].price} <br>${details.data.pricing[0].plan}</p></div>
-          <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#F28927] text-[16px] text-center font-work-sans font-bold">${details.data.pricing[1].price} <br>${details.data.pricing[1].plan}</p></div>
-          <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#EB5757] text-[16px] text-center font-work-sans font-bold">${details.data.pricing[2].price} <br>${details.data.pricing[2].plan}</p></div>
+      <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#03A30A] text-[16px] text-center font-work-sans font-bold">${
+        details.data.pricing ? details.data.pricing[0].price : "No data"
+      } <br>${
+    details.data.pricing ? details.data.pricing[0].plan : "No Data"
+  }</p></div>
+          <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#F28927] text-[16px] text-center font-work-sans font-bold">${
+            details.data.pricing ? details.data.pricing[1].price : "No Data"
+          } <br>${
+    details.data.pricing ? details.data.pricing[1].plan : "No Data"
+  }</p></div>
+          <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#EB5757] text-[16px] text-center font-work-sans font-bold">${
+            details.data.pricing ? details.data.pricing[2].price : "No Data"
+          } <br>${
+    details.data.pricing ? details.data.pricing[2].plan : "No Data"
+  }</p></div>
     </div>
     <div class="flex gap-4 items-center justify-between">
       <div><h2
@@ -148,20 +176,48 @@ async function detailsClickHandler(id) {
         >
         Features
         </h2>
-      <ul >
-      <li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.features[1].feature_name}</li>
-      <li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.features[2].feature_name}</li>
-      <li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.features[3].feature_name}</li></ul>
+        <ul>
+        ${
+          details.data.features[1] && details.data.features[1].feature_name
+            ? `<li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.features[1].feature_name}</li>`
+            : ""
+        }
+        ${
+          details.data.features[2] && details.data.features[2].feature_name
+            ? `<li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.features[2].feature_name}</li>`
+            : ""
+        }
+        ${
+          details.data.features[3] && details.data.features[3].feature_name
+            ? `<li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.features[3].feature_name}</li>`
+            : ""
+        }
+      </ul>
+      
       </div>
       <div><h2
           class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
         >
         Integration
         </h2>
-      <ul>
-      <li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.integrations[0]}</li>
-      <li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.integrations[1]}</li>
-      <li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.integrations[2]}</li></ul>
+        <ul>
+        ${
+          details.data.integrations && details.data.integrations[0]
+            ? `<li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.integrations[0]}</li>`
+            : ""
+        }
+        ${
+          details.data.integrations && details.data.integrations[1]
+            ? `<li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.integrations[1]}</li>`
+            : ""
+        }
+        ${
+          details.data.integrations && details.data.integrations[2]
+            ? `<li class="list-disc text-[#585858] font-work-sans text-[16px] font-normal">${details.data.integrations[2]}</li>`
+            : ""
+        }
+      </ul>
+      
       </div>
     </div>
 </div>
