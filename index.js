@@ -282,7 +282,7 @@ async function detailsClickHandler(id) {
     ${details?.data?.description}
 
     </h2></div>
-    <div class="flex gap-2 justify-center items-center">
+    <div class="flex gap-2 flex-col md:flex-row justify-center items-center">
       <div class="w-[132px] h-[100px] bg-white rounded-2xl flex items-center justify-center"><p class="text-[#03A30A] text-[16px] text-center font-work-sans font-bold">${
         details.data.pricing ? details.data.pricing[0].price : "No data"
       } <br>${
@@ -299,7 +299,7 @@ async function detailsClickHandler(id) {
     details.data.pricing ? details.data.pricing[2].plan : "No Data"
   }</p></div>
     </div>
-    <div class="flex gap-4 items-center justify-between">
+    <div class="flex gap-4 flex-col md:flex-row items-center justify-between">
       <div><h2
           class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
         >
