@@ -1,5 +1,6 @@
 let isShowAll = false;
 let isLoading = true;
+let isSorted = false;
 const loadData = async () => {
   isLoading = true;
   if (isLoading) {
@@ -10,124 +11,252 @@ const loadData = async () => {
   const data = await res.json();
   console.log(data.data.tools);
   const tools = data.data.tools;
-  let firstTools = tools.slice(0, 6);
+  let sortedTools = tools.sort(
+    (a, b) => new Date(b.published_in) - new Date(a.published_in)
+  );
+
   const showAllBtn = document.getElementById("btn-show-all");
   const cardContainer = document.getElementById("card-container");
   cardContainer.innerHTML = ``;
   if (!isShowAll) {
     showAllBtn.classList.remove("hidden");
-    firstTools.forEach((item, index) => {
-      let div = document.createElement("div");
-      let str = "";
-      item.features.forEach((feature, index) => {
-        str += `<p>${index + 1}. ${feature}.</p>`;
+    if (!isSorted) {
+      tools.slice(0, 6).forEach((item, index) => {
+        let div = document.createElement("div");
+        let str = "";
+        item.features.forEach((feature, index) => {
+          str += `<p>${index + 1}. ${feature}.</p>`;
+        });
+        div.classList = "card bg-base-100 shadow-xl p-[25px]";
+        div.innerHTML = `   <figure>
+          <img
+            src=${item.image ? item.image : "./images/noimage.jpg"}
+            alt="Shoes"
+            onerror ="replaceImage(this)"
+          />
+        </figure>
+        <div class="">
+          <h2
+            class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+          >
+            Features
+          </h2>
+          <div class="text-left">
+      ${str}
+          </div>
+          <hr class="w-full bg-[#11111133] mt-[24px]" />
+          <div class="mt-[24px] flex items-center justify-between">
+            <div>
+              <h2
+                class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+              >
+                ${item.name}
+              </h2>
+              <div class="flex gap-2">
+                <img src="./images/Frame(1).svg" alt="" srcset="" />
+                <p>${item.published_in}</p>
+              </div>
+            </div>
+            <div
+              class="bg-[#FEF7F7] w-[50px] h-[50px] rounded rounded-[50%] flex justify-center items-center cursor-pointer active:bg-gray-100"
+              onclick="detailsClickHandler('${
+                item.id
+              }'); my_modal_3.showModal()"
+            >
+              <button class="">
+                <img src="./images/arrow.svg" alt="" srcset="" />
+              </button>
+            </div>
+          </div>
+        </div>`;
+        // const hrElement = document.querySelector("hr");
+        // div.insertBefore(hrElement, features);
+        cardContainer.appendChild(div);
+        isLoading = false;
+        if (!isLoading) {
+          const spinner = document.getElementById("loading-spinner");
+          spinner.classList.add("hidden");
+        }
       });
-      div.classList = "card bg-base-100 shadow-xl p-[25px]";
-      div.innerHTML = `   <figure>
-    <img
-      src=${item.image}
-      alt="Shoes"
-      onerror ="replaceImage(this)"
-    />
-  </figure>
-  <div class="">
-    <h2
-      class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
-    >
-      Features
-    </h2>
-    <div class="text-left">
-${str}
-    </div>
-    <hr class="w-full bg-[#11111133] mt-[24px]" />
-    <div class="mt-[24px] flex items-center justify-between">
-      <div>
-        <h2
-          class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
-        >
-          ${item.name}
-        </h2>
-        <div class="flex gap-2">
-          <img src="./images/Frame(1).svg" alt="" srcset="" />
-          <p>${item.published_in}</p>
-        </div>
-      </div>
-      <div
-        class="bg-[#FEF7F7] w-[50px] h-[50px] rounded rounded-[50%] flex justify-center items-center cursor-pointer active:bg-gray-100"
-        onclick="detailsClickHandler('${item.id}'); my_modal_3.showModal()"
-      >
-        <button class="">
-          <img src="./images/arrow.svg" alt="" srcset="" />
-        </button>
-      </div>
-    </div>
-  </div>`;
-      // const hrElement = document.querySelector("hr");
-      // div.insertBefore(hrElement, features);
-      cardContainer.appendChild(div);
-      isLoading = false;
-      if (!isLoading) {
-        const spinner = document.getElementById("loading-spinner");
-        spinner.classList.add("hidden");
-      }
-    });
+    } else {
+      sortedTools.slice(0, 6).forEach((item, index) => {
+        let div = document.createElement("div");
+        let str = "";
+        item.features.forEach((feature, index) => {
+          str += `<p>${index + 1}. ${feature}.</p>`;
+        });
+        div.classList = "card bg-base-100 shadow-xl p-[25px]";
+        div.innerHTML = `   <figure>
+          <img
+            src=${item.image ? item.image : "./images/noimage.jpg"}
+            alt="Shoes"
+            onerror ="replaceImage(this)"
+          />
+        </figure>
+        <div class="">
+          <h2
+            class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+          >
+            Features
+          </h2>
+          <div class="text-left">
+      ${str}
+          </div>
+          <hr class="w-full bg-[#11111133] mt-[24px]" />
+          <div class="mt-[24px] flex items-center justify-between">
+            <div>
+              <h2
+                class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+              >
+                ${item?.name}
+              </h2>
+              <div class="flex gap-2">
+                <img src="./images/Frame(1).svg" alt="" srcset="" />
+                <p>${item.published_in}</p>
+              </div>
+            </div>
+            <div
+              class="bg-[#FEF7F7] w-[50px] h-[50px] rounded rounded-[50%] flex justify-center items-center cursor-pointer active:bg-gray-100"
+              onclick="detailsClickHandler('${
+                item?.id
+              }'); my_modal_3.showModal()"
+            >
+              <button class="">
+                <img src="./images/arrow.svg" alt="" srcset="" />
+              </button>
+            </div>
+          </div>
+        </div>`;
+        // const hrElement = document.querySelector("hr");
+        // div.insertBefore(hrElement, features);
+        cardContainer.appendChild(div);
+        isLoading = false;
+        if (!isLoading) {
+          const spinner = document.getElementById("loading-spinner");
+          spinner.classList.add("hidden");
+        }
+      });
+    }
   } else {
-    showAllBtn.classList.add("hidden");
+    if (!isSorted) {
+      showAllBtn.classList.add("hidden");
 
-    tools.forEach((item, index) => {
-      let div = document.createElement("div");
-      let str = "";
-      item.features.forEach((feature, index) => {
-        str += `<p>${index + 1}. ${feature}.</p>`;
-      });
-      div.classList = "card bg-base-100 shadow-xl p-[25px]";
-      div.innerHTML = `   <figure>
-    <img
-      src=${item.image}
-      alt="Shoes"
-      onerror ="replaceImage(this)"
-    />
-  </figure>
-  <div class="">
-    <h2
-      class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
-    >
-      Features
-    </h2>
-    <div class="text-left">
-${str}
-    </div>
-    <hr class="w-full bg-[#11111133] mt-[24px]" />
-    <div class="mt-[24px] flex items-center justify-between">
-      <div>
+      tools.forEach((item, index) => {
+        let div = document.createElement("div");
+        let str = "";
+        item.features.forEach((feature, index) => {
+          str += `<p>${index + 1}. ${feature}.</p>`;
+        });
+        div.classList = "card bg-base-100 shadow-xl p-[25px]";
+        div.innerHTML = `   <figure>
+        <img
+          src=${item.image ? item.image : "./images/noimage.jpg"}
+          alt="Shoes"
+          onerror ="replaceImage(this)"
+        />
+      </figure>
+      <div class="">
         <h2
           class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
         >
-          ${item.name}
+          Features
         </h2>
-        <div class="flex gap-2">
-          <img src="./images/Frame(1).svg" alt="" srcset="" />
-          <p>${item.published_in}</p>
+        <div class="text-left">
+    ${str}
         </div>
-      </div>
-      <div
-        class="bg-[#FEF7F7] w-[50px] h-[50px] rounded rounded-[50%] flex justify-center items-center cursor-pointer active:bg-gray-100" onclick="detailsClickHandler('${item.id}'); my_modal_3.showModal()"
-      >
-        <button class="">
-          <img src="./images/arrow.svg" alt="" srcset="" />
-        </button>
-      </div>
-    </div>
-  </div>`;
-      // const hrElement = document.querySelector("hr");
-      // div.insertBefore(hrElement, features);
-      cardContainer.appendChild(div);
-      isLoading = false;
-      if (!isLoading) {
-        const spinner = document.getElementById("loading-spinner");
-        spinner.classList.add("hidden");
-      }
-    });
+        <hr class="w-full bg-[#11111133] mt-[24px]" />
+        <div class="mt-[24px] flex items-center justify-between">
+          <div>
+            <h2
+              class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+            >
+              ${item?.name}
+            </h2>
+            <div class="flex gap-2">
+              <img src="./images/Frame(1).svg" alt="" srcset="" />
+              <p>${item?.published_in}</p>
+            </div>
+          </div>
+          <div
+            class="bg-[#FEF7F7] w-[50px] h-[50px] rounded rounded-[50%] flex justify-center items-center cursor-pointer active:bg-gray-100" onclick="detailsClickHandler('${
+              item?.id
+            }'); my_modal_3.showModal()"
+          >
+            <button class="">
+              <img src="./images/arrow.svg" alt="" srcset="" />
+            </button>
+          </div>
+        </div>
+      </div>`;
+        // const hrElement = document.querySelector("hr");
+        // div.insertBefore(hrElement, features);
+        cardContainer.appendChild(div);
+        isLoading = false;
+        if (!isLoading) {
+          const spinner = document.getElementById("loading-spinner");
+          spinner.classList.add("hidden");
+        }
+      });
+    } else {
+      showAllBtn.classList.add("hidden");
+
+      sortedTools.forEach((item, index) => {
+        let div = document.createElement("div");
+        let str = "";
+        item.features.forEach((feature, index) => {
+          str += `<p>${index + 1}. ${feature}.</p>`;
+        });
+        div.classList = "card bg-base-100 shadow-xl p-[25px]";
+        div.innerHTML = `   <figure>
+        <img
+          src=${item.image ? item.image : "./images/noimage.jpg"}
+          alt="Shoes"
+          onerror ="replaceImage(this)"
+        />
+      </figure>
+      <div class="">
+        <h2
+          class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+        >
+          Features
+        </h2>
+        <div class="text-left">
+    ${str}
+        </div>
+        <hr class="w-full bg-[#11111133] mt-[24px]" />
+        <div class="mt-[24px] flex items-center justify-between">
+          <div>
+            <h2
+              class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
+            >
+              ${item?.name}
+            </h2>
+            <div class="flex gap-2">
+              <img src="./images/Frame(1).svg" alt="" srcset="" />
+              <p>${item?.published_in}</p>
+            </div>
+          </div>
+          <div
+            class="bg-[#FEF7F7] w-[50px] h-[50px] rounded rounded-[50%] flex justify-center items-center cursor-pointer active:bg-gray-100" onclick="detailsClickHandler('${
+              item?.id
+            }'); my_modal_3.showModal()"
+          >
+            <button class="">
+              <img src="./images/arrow.svg" alt="" srcset="" />
+            </button>
+          </div>
+        </div>
+      </div>`;
+        // const hrElement = document.querySelector("hr");
+        // div.insertBefore(hrElement, features);
+        cardContainer.appendChild(div);
+        isLoading = false;
+        if (!isLoading) {
+          const spinner = document.getElementById("loading-spinner");
+          spinner.classList.add("hidden");
+        }
+      });
+    }
   }
 };
 loadData();
@@ -150,7 +279,7 @@ async function detailsClickHandler(id) {
   <div><h2
       class="text-left text-[25px] font-work-sans text-[#111] font-semibold mt-[25px]"
     >
-    ${details.data.description}
+    ${details?.data?.description}
 
     </h2></div>
     <div class="flex gap-2 justify-center items-center">
@@ -224,7 +353,11 @@ async function detailsClickHandler(id) {
 <div>
   <div class="card bg-base-100 shadow-xl p-[25px]">
 <figure>
-<img src=${details.data.image_link[0]} alt="" />
+<img src=${
+    details.data?.image_link[0]
+      ? details.data.image_link[0]
+      : "./images/noimage.jpg"
+  } alt="" />
 </figure>
 <div class="">
 <h2
@@ -238,4 +371,9 @@ Hi, how are you doing today?
 </div>
 </div>
     </div>`;
+}
+
+function sortHandler() {
+  isSorted = true;
+  loadData();
 }
