@@ -85,11 +85,29 @@
       </div>
       <div class="text-center mt-[24px]">
         <button
-          class="btn bg-[#EB5757] text-white text-[20px] font-work-sans font-semibold hover:text-[#EB5757]"
+          class="btn bg-[#EB5757] text-white text-[20px] font-work-sans font-semibold hover:text-[#EB5757] hidden"
+          id="btn-show-all"
+          onclick="showButtonHandler()"
         >
           Show All
         </button>
       </div>
+      <!-- You can open the modal using ID.showModal() method -->
+
+      <dialog id="my_modal_3" class="modal">
+        <form method="dialog" class="modal-box">
+          <button
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-white bg-[#EB5757]"
+          >
+            ✕
+          </button>
+          <div id="modal-content" class="grid grid-cols-1 gap-4">
+           
+            </div>
+            
+          </div>
+        </form>
+      </dialog>
     </main>
     <footer></footer>
     <script src="./index.js"></script>
